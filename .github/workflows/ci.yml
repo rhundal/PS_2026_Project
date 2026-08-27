@@ -1,0 +1,36 @@
+name: HTML/CSS Check
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+      - uses: actions/checkout@v4
+
+      - name: Validate file strucutre
+        run: |
+          echo "Checking for index.html..."
+          test -f index.html || (echo "Error: No index html file found" && exit 1)
+
+          echo "Checking for styles folder..."
+          test -d css | test -d styles || (echo "Error: No folder for CSS files found" && exit 1")
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "20.19.1"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests
+        run: npm test
+
+      - name: Run lint
+        run: npm run lint
